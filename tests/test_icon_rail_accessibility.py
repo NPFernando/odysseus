@@ -31,3 +31,12 @@ def test_icon_rail_buttons_have_programmatic_names():
     for button_id, label in expected_labels.items():
         assert f'id="{button_id}"' in _INDEX
         assert f'id="{button_id}" aria-label="{label}"' in _INDEX
+
+
+def test_icon_rail_has_visible_keyboard_focus_treatment():
+    """Icon-only controls need an explicit focus cue beyond hover styling."""
+    style = (_REPO / "static" / "style.css").read_text(encoding="utf-8")
+
+    assert ".icon-rail-btn:focus-visible" in style
+    assert "outline: 2px solid var(--red, var(--color-error));" in style
+    assert "outline-offset: 2px;" in style
