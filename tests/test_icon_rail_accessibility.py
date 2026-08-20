@@ -40,3 +40,14 @@ def test_icon_rail_has_visible_keyboard_focus_treatment():
     assert ".icon-rail-btn:focus-visible" in style
     assert "outline: 2px solid var(--red, var(--color-error));" in style
     assert "outline-offset: 2px;" in style
+
+
+def test_icon_rail_exposes_toolbar_semantics_and_arrow_navigation():
+    """The compact rail has a discoverable label and keyboard traversal."""
+    app = (_REPO / "static" / "app.js").read_text(encoding="utf-8")
+
+    assert 'id="icon-rail" role="toolbar" aria-label="Workspace tools" aria-orientation="vertical"' in _INDEX
+    assert "function initRailKeyboardNavigation()" in app
+    assert "['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End']" in app
+    assert "buttons[nextIndex].focus({ preventScroll: true });" in app
+    assert "initRailKeyboardNavigation();" in app
