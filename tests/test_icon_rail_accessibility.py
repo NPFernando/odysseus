@@ -42,6 +42,15 @@ def test_icon_rail_has_visible_keyboard_focus_treatment():
     assert "outline-offset: 2px;" in style
 
 
+def test_icon_rail_reveals_tool_name_for_keyboard_focus():
+    """Keyboard users need the same visible tool name as pointer users."""
+    style = (_REPO / "static" / "style.css").read_text(encoding="utf-8")
+
+    assert ".icon-rail-btn:focus-visible .rail-hover-label" in style
+    assert "opacity: 1;" in style
+    assert "transform: translateY(-50%) translateX(0);" in style
+
+
 def test_icon_rail_exposes_toolbar_semantics_and_arrow_navigation():
     """The compact rail has a discoverable label and keyboard traversal."""
     app = (_REPO / "static" / "app.js").read_text(encoding="utf-8")
