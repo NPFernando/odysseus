@@ -57,6 +57,7 @@ def test_icon_rail_exposes_toolbar_semantics_and_arrow_navigation():
 
     assert 'id="icon-rail" role="toolbar" aria-label="Workspace tools" aria-orientation="vertical"' in _INDEX
     assert "function initRailKeyboardNavigation()" in app
+    assert "button.tabIndex = button === activeButton ? 0 : -1;" in app
     assert "['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End']" in app
     assert "buttons[nextIndex].focus({ preventScroll: true });" in app
     assert "initRailKeyboardNavigation();" in app
