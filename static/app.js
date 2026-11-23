@@ -185,6 +185,51 @@ function initRailHoverLabels() {
   });
 }
 
+function initRailKeyboardNavigation() {
+  const rail = document.getElementById('icon-rail');
+  if (!rail) return;
+
+  const allButtons = Array.from(rail.querySelectorAll('.icon-rail-btn'));
+  const visibleButtons = () => allButtons.filter(button => {
+    if (button.disabled) return false;
+    const style = getComputedStyle(button);
+    return style.display !== 'none' && style.visibility !== 'hidden' && button.getClientRects().length > 0;
+  });
+  const setTabStop = activeButton => {
+    allButtons.forEach(button => {
+      button.tabIndex = button === activeButton ? 0 : -1;
+    });
+  };
+
+  allButtons.forEach(button => { button.tabIndex = -1; });
+  const initialButtons = visibleButtons();
+  setTabStop(initialButtons.find(button => button === document.activeElement) || initialButtons[0]);
+
+  rail.addEventListener('focusin', event => {
+    if (allButtons.includes(event.target)) setTabStop(event.target);
+  });
+
+  rail.addEventListener('keydown', event => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const key = event.key;
+    if (!['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(key)) return;
+
+    const buttons = visibleButtons();
+    const index = buttons.indexOf(event.target);
+    if (index < 0 || buttons.length === 0) return;
+
+    let nextIndex = index;
+    if (key === 'Home') nextIndex = 0;
+    else if (key === 'End') nextIndex = buttons.length - 1;
+    else if (key === 'ArrowDown' || key === 'ArrowRight') nextIndex = (index + 1) % buttons.length;
+    else nextIndex = (index - 1 + buttons.length) % buttons.length;
+
+    event.preventDefault();
+    setTabStop(buttons[nextIndex]);
+    buttons[nextIndex].focus({ preventScroll: true });
+  });
+}
+
 // Redirect to login on 401 from any fetch
 const _origFetch = window.fetch;
 window.fetch = async function(...args) {
@@ -3587,6 +3632,7 @@ function startOdysseusApp() {
   // Set CSS variables
   document.documentElement.style.setProperty('--line-height', '20px');
   initRailHoverLabels();
+  initRailKeyboardNavigation();
 
   // Smooth keyboard open/close on mobile — keep chat scrolled to bottom
   if (window.visualViewport && 'ontouchstart' in window) {

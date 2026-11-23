@@ -791,6 +791,14 @@ body.bg-pattern-sparkles {
       font-weight: 600;
     }
     .icon-rail-btn:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 12%, transparent); }
+    /* The rail is icon-only, so keyboard focus needs the same deliberate cue
+       as sidebar rows rather than relying on hover-only feedback. */
+    .icon-rail-btn:focus-visible {
+      opacity: 1;
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      outline: 2px solid var(--red, var(--color-error));
+      outline-offset: 2px;
+    }
     .icon-rail-btn.active-section { opacity: 1; background: color-mix(in srgb, var(--color-accent) 15%, transparent); }
     /* Unified "minimized" indicator for any rail/sidebar button whose modal is held open */
     .rail-minimized { position: relative; }
@@ -1141,7 +1149,8 @@ body.bg-pattern-sparkles {
       z-index: 20;
       transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .icon-rail-btn:hover .rail-hover-label {
+    .icon-rail-btn:hover .rail-hover-label,
+    .icon-rail-btn:focus-visible .rail-hover-label {
       opacity: 1;
       transform: translateY(-50%) translateX(0);
     }
